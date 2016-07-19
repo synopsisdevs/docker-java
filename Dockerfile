@@ -1,7 +1,14 @@
-FROM java
+FROM synopsis/java
 
 MAINTAINER developers@synopsis.cz
 
-VOLUME /usr/src/app
+RUN apt-get update && apt-get install -y supervisor && apt-get clean
+RUN mkdir -p /var/log/supervisor
 
-WORKDIR /usr/src/app
+COPY supervisord.conf /etc/supervisor/conf.d/000-supervisord.conf
+
+VOLUME ["/etc/supervisor/conf.d"]
+
+EXPOSE 9001
+
+CMD ["/usr/bin/supervisord"]
